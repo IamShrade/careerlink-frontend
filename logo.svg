@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 40" width="180" height="40">
+  <style>
+    .text { fill: #1d4ed8; font-size: 24px; font-family: 'Segoe UI', sans-serif; font-weight: bold; }
+    .dot { fill: #10b981; }
+  </style>
+  <text x="0" y="28" class="text">CareerLink</text>
+  <circle cx="165" cy="10" r="5" class="dot"/>
+</svg>

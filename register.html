@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel='manifest' href='manifest.json'>
+<meta name='theme-color' content='#3b82f6'>
+<link rel='icon' href='favicon.ico' type='image/x-icon'>
+  <meta charset="UTF-8" />
+  <title>Register - CareerLink AI</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="toggle.js"></script>
+<script>
+    async function registerUser() {
+      const email = document.getElementById("email").value;
+      const name = document.getElementById("name").value;
+      const password = document.getElementById("password").value;
+
+      const res = await fetch("https://careerlink-backend.onrender.com/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, name, password })
+      });
+
+      if (!res.ok) {
+        alert("Registration failed!");
+        return;
+      }
+
+      const data = await res.json();
+      localStorage.setItem("userId", data.user_id);
+      alert("Registration successful!");
+      window.location.href = "dashboard.html";
+    }
+  </script>
+</head>
+<body>
+<div class="dark-toggle"><label><input type="checkbox" id="theme-toggle" onchange="toggleTheme(this)"> 🌙 Dark Mode</label></div><img src="logo_animated.svg" alt="CareerLink" style="width:180px;margin-bottom:16px;">
+
+<div class="dark-toggle">
+<label><input type="checkbox" id="theme-toggle" onchange="toggleTheme(this)"> 🌙 Dark Mode</label>
+</div><img src="logo.svg" alt="CareerLink" style="width:160px;margin-bottom:10px;">
+  <div class="container">
+    <h2>Register</h2>
+    <input id="name" type="text" placeholder="Full Name" />
+    <input id="email" type="email" placeholder="Email" />
+    <input id="password" type="password" placeholder="Password" />
+    <button onclick="registerUser()">Register</button>
+    <p>Already have an account? <a href="login.html">Login</a></p>
+  </div>
+<script src="onboarding.js"></script>
+<script src="transition.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js").then(() => {
+    console.log("Service Worker Registered");
+  });
+}
+</script>
+</body>
+</html>

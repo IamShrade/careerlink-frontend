@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel='manifest' href='manifest.json'>
+<meta name='theme-color' content='#3b82f6'>
+<link rel='icon' href='favicon.ico' type='image/x-icon'><meta charset="UTF-8"><title>CareerLink AI - AI Career Coach</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<div class="dark-toggle"><label><input type="checkbox" id="theme-toggle" onchange="toggleTheme(this)"> 🌙 Dark Mode</label></div><img src="logo_animated.svg" alt="CareerLink" style="width:180px;margin-bottom:16px;">
+
+<div class="dark-toggle">
+<label><input type="checkbox" id="theme-toggle" onchange="toggleTheme(this)"> 🌙 Dark Mode</label>
+</div><img src="logo.svg" alt="CareerLink" style="width:160px;margin-bottom:10px;"><div class="container"><h2>AI Career Coach</h2>
+<textarea placeholder="Ask your career question..."></textarea>
+<button>Ask Coach</button>
+<div class="card">Tip: Consider earning a Google Data Analytics Certificate to boost your resume.</div></div><script src="toggle.js"></script>
+<script src="onboarding.js"></script>
+<script src="transition.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js").then(() => {
+    console.log("Service Worker Registered");
+  });
+}
+</script>
+</body></html>
