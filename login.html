@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel='manifest' href='manifest.json'>
+<meta name='theme-color' content='#3b82f6'>
+<link rel='icon' href='favicon.ico' type='image/x-icon'>
+  <meta charset="UTF-8" />
+  <title>Login - CareerLink AI</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="toggle.js"></script>
+<script>
+    async function loginUser() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      const res = await fetch("https://careerlink-backend.onrender.com/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      if (!res.ok) {
+        alert("Login failed!");
+        return;
+      }
+
+      const data = await res.json();
+      localStorage.setItem("token", data.access_token);
+      alert("Login successful!");
+      window.location.href = "dashboard.html";
+    }
+  </script>
+</head>
+<body>
+<div class="dark-toggle"><label><input type="checkbox" id="theme-toggle" onchange="toggleTheme(this)"> 🌙 Dark Mode</label></div><img src="logo_animated.svg" alt="CareerLink" style="width:180px;margin-bottom:16px;">
+
+<div class="dark-toggle">
+<label><input type="checkbox" id="theme-toggle" onchange="toggleTheme(this)"> 🌙 Dark Mode</label>
+</div><img src="logo.svg" alt="CareerLink" style="width:160px;margin-bottom:10px;">
+  <div class="container">
+    <h2>Login</h2>
+    <input id="email" type="email" placeholder="Email" />
+    <input id="password" type="password" placeholder="Password" />
+    <button onclick="loginUser()">Login</button>
+    <p>Don't have an account? <a href="register.html">Register</a></p>
+  </div>
+<script src="onboarding.js"></script>
+<script src="transition.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js").then(() => {
+    console.log("Service Worker Registered");
+  });
+}
+</script>
+</body>
+</html>

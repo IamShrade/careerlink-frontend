@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel='manifest' href='manifest.json'>
+<meta name='theme-color' content='#3b82f6'>
+<link rel='icon' href='favicon.ico' type='image/x-icon'><meta charset="UTF-8"><title>CareerLink AI - Job Matching</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<div class="dark-toggle"><label><input type="checkbox" id="theme-toggle" onchange="toggleTheme(this)"> 🌙 Dark Mode</label></div><img src="logo_animated.svg" alt="CareerLink" style="width:180px;margin-bottom:16px;">
+
+<div class="dark-toggle">
+<label><input type="checkbox" id="theme-toggle" onchange="toggleTheme(this)"> 🌙 Dark Mode</label>
+</div><img src="logo.svg" alt="CareerLink" style="width:160px;margin-bottom:10px;"><div class="container"><h2>Job Matches</h2><input type="text" placeholder="Search by title, company, or keyword...">
+<div class="card">Frontend Developer - Google<br><small>Remote | Full-time</small></div>
+<div class="card">Data Analyst - Amazon<br><small>Seattle, WA | Full-time</small></div>
+<div class="card">AI Research Intern - OpenAI<br><small>San Francisco | Internship</small></div>
+<button>Enable Job Alerts</button></div><script src="toggle.js"></script>
+<script src="onboarding.js"></script>
+<script src="transition.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js").then(() => {
+    console.log("Service Worker Registered");
+  });
+}
+</script>
+</body></html>

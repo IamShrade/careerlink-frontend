@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel='manifest' href='manifest.json'>
+<meta name='theme-color' content='#3b82f6'>
+<link rel='icon' href='favicon.ico' type='image/x-icon'>
+  <meta charset="UTF-8" />
+  <title>My Applications - CareerLink AI</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="toggle.js"></script>
+<script>
+    const apiBase = "https://careerlink-backend.onrender.com";
+
+    async function loadApplications() {
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        alert("Not logged in.");
+        window.location.href = "login.html";
+        return;
+      }
+
+      const res = await fetch(`${apiBase}/applications/${userId}`);
+      const apps = await res.json();
+
+      const container = document.getElementById("app-list");
+      container.innerHTML = "";
+      apps.forEach(app => {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `<strong>${app.job_title}</strong> at ${app.company} — <em>${app.status}</em>`;
+        container.appendChild(div);
+      });
+    }
+
+    async function addApplication() {
+      const userId = localStorage.getItem("userId");
+      const job_title = document.getElementById("job_title").value;
+      const company = document.getElementById("company").value;
+      const status = document.getElementById("status").value;
+
+      const res = await fetch(`${apiBase}/applications`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ user_id: parseInt(userId), job_title, company, status })
+      });
+
+      if (!res.ok) {
+        alert("Failed to save application");
+        return;
+      }
+
+      alert("Application saved!");
+      loadApplications();
+    }
+
+    window.onload = loadApplications;
+  </script>
+</head>
+<body>
+<div class="dark-toggle"><label><input type="checkbox" id="theme-toggle" onchange="toggleTheme(this)"> 🌙 Dark Mode</label></div><img src="logo_animated.svg" alt="CareerLink" style="width:180px;margin-bottom:16px;">
+
+<div class="dark-toggle">
+<label><input type="checkbox" id="theme-toggle" onchange="toggleTheme(this)"> 🌙 Dark Mode</label>
+</div><img src="logo.svg" alt="CareerLink" style="width:160px;margin-bottom:10px;">
+  <div class="container">
+    <h2>My Applications</h2>
+    <div>
+      <input id="job_title" type="text" placeholder="Job Title" />
+      <input id="company" type="text" placeholder="Company" />
+      <input id="status" type="text" placeholder="Status (e.g., Applied)" />
+      <button onclick="addApplication()">Add Application</button>
+    </div>
+    <div id="app-list" style="margin-top: 20px;"></div>
+  </div>
+<script src="onboarding.js"></script>
+<script src="transition.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js").then(() => {
+    console.log("Service Worker Registered");
+  });
+}
+</script>
+</body>
+</html>

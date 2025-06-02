@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel='manifest' href='manifest.json'>
+<meta name='theme-color' content='#3b82f6'>
+<link rel='icon' href='favicon.ico' type='image/x-icon'>
+    <meta charset="UTF-8">
+    <title>CareerLink AI - Resume Builder</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="toggle.js"></script>
+<script>
+    let lastData = null;
+
+    async function optimizeResume() {
+        const resume = document.getElementById("resume").value;
+        const jobdesc = document.getElementById("jobdesc").value;
+
+        const res = await fetch("https://careerlink-backend.onrender.com/optimize-resume", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                resume_text: resume,
+                job_description: jobdesc
+            })
+        });
+
+        lastData = await res.json();
+        document.getElementById("result").innerText = "Score: " + lastData.ats_score + "\n\n" + lastData.optimized_resume;
+        document.getElementById("cover").innerText = lastData.cover_letter;
+        document.getElementById("keywords").innerText = "Matched Keywords: " + lastData.ats_keywords_found.join(", ");
+        document.getElementById("status").innerText = "";
+    }
+
+    function resetForm() {
+        document.getElementById("resume").value = "";
+        document.getElementById("jobdesc").value = "";
+        document.getElementById("result").innerText = "";
+        document.getElementById("cover").innerText = "";
+        document.getElementById("keywords").innerText = "";
+        document.getElementById("status").innerText = "";
+        lastData = null;
+    }
+
+    function downloadResume() {
+        if (!lastData) return alert("Please optimize first.");
+        const blob = new Blob([lastData.optimized_resume], { type: "text/plain" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "optimized_resume.txt";
+        link.click();
+    }
+
+    function sendToEmail() {
+        if (!lastData) return alert("Please optimize first.");
+        document.getElementById("status").innerText = "✅ Resume sent to your email!";
+    }
+
+    function previewResume() {
+        if (!lastData) return alert("Please optimize first.");
+        alert(lastData.optimized_resume);
+    }
+
+    function showMatchDetails() {
+        if (!lastData) return alert("Please optimize first.");
+        alert("Matched Keywords:\n" + lastData.ats_keywords_found.join(", "));
+    }
+    </script>
+</head>
+<body>
+<div class="dark-toggle"><label><input type="checkbox" id="theme-toggle" onchange="toggleTheme(this)"> 🌙 Dark Mode</label></div><img src="logo_animated.svg" alt="CareerLink" style="width:180px;margin-bottom:16px;">
+
+<div class="dark-toggle">
+<label><input type="checkbox" id="theme-toggle" onchange="toggleTheme(this)"> 🌙 Dark Mode</label>
+</div><img src="logo.svg" alt="CareerLink" style="width:160px;margin-bottom:10px;">
+<div class="container">
+    <h2>Resume Builder</h2>
+    <textarea id="jobdesc" placeholder="Paste job description here..."></textarea>
+    <textarea id="resume" placeholder="Resume content here..." rows="10"></textarea>
+    <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;">
+        <button onclick="optimizeResume()">Optimize Resume</button>
+        <button onclick="resetForm()">Reset</button>
+        <button onclick="downloadResume()">Download</button>
+        <button onclick="sendToEmail()">Send to Email</button>
+        <button onclick="previewResume()">Preview</button>
+        <button onclick="showMatchDetails()">ATS Match Details</button>
+    </div>
+    <div class="card">
+        <h3>Optimized Resume:</h3>
+        <pre id="result"></pre>
+    </div>
+    <div class="card">
+        <h3>Generated Cover Letter:</h3>
+        <pre id="cover"></pre>
+    </div>
+    <div class="card">
+        <h3>Keyword Match Info:</h3>
+        <pre id="keywords"></pre>
+    </div>
+    <p id="status" style="color: green; font-weight: bold;"></p>
+</div>
+<script src="onboarding.js"></script>
+<script src="transition.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js").then(() => {
+    console.log("Service Worker Registered");
+  });
+}
+</script>
+</body>
+</html>

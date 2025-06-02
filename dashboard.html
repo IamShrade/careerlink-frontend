@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel='manifest' href='manifest.json'>
+<meta name='theme-color' content='#3b82f6'>
+  <meta charset="UTF-8" />
+  <title>Dashboard - CareerLink AI</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="favicon.ico" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="transition.js"></script>
+  <script src="toggle.js"></script>
+  <script src="onboarding.js"></script>
+</head>
+<body>
+<div class="container">
+  <div class="dark-toggle">
+    <label><input type="checkbox" id="theme-toggle" onchange="toggleTheme(this)"> 🌙 Dark Mode</label>
+  </div>
+  <img src="logo_animated.svg" alt="CareerLink" style="width:180px;margin-bottom:16px;">
+  <h2 id="greeting">Welcome!</h2>
+  <div style="text-align:right;">
+    <button onclick="logoutUser()">Logout</button>
+  </div>
+  <section class="cards">
+    <div class="card"><canvas id="resumeChart" height="150"></canvas></div>
+    <div class="card"><canvas id="appChart" height="150"></canvas></div>
+  </section>
+  <a href="resume.html" class="cta">Build/Update Resume</a>
+</div>
+<script>
+const API = "https://careerlink-backend.onrender.com";
+
+async function loadUserAndStats() {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("You must be logged in.");
+    window.location.href = "login.html";
+    return;
+  }
+
+  const res = await fetch(`${API}/me`, {
+    headers: { "Authorization": "Bearer " + token }
+  });
+
+  if (!res.ok) {
+    alert("Session expired.");
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+    return;
+  }
+
+  const user = await res.json();
+  document.getElementById("greeting").innerText = "Welcome, " + user.name;
+
+  drawCharts(user.user_id, token);
+}
+
+async function drawCharts(userId, token) {
+  // Fetch resume scores (mocked for now as top 4 scores)
+  const resumeRes = await fetch(`${API}/resumes`, {
+    headers: { "Authorization": "Bearer " + token }
+  });
+  const resumes = await resumeRes.json();
+  const scores = resumes.slice(-4).map(r => r.ats_score);
+
+  const ctx1 = document.getElementById("resumeChart").getContext("2d");
+  new Chart(ctx1, {
+    type: "bar",
+    data: {
+      labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
+      datasets: [{
+        label: "Resume Score",
+        data: scores.length === 4 ? scores : [65, 72, 78, 84],
+        backgroundColor: "#3b82f6"
+      }]
+    },
+    options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } } }
+  });
+
+  // Fetch application statuses
+  const appRes = await fetch(`${API}/applications/${userId}`, {
+    headers: { "Authorization": "Bearer " + token }
+  });
+  const apps = await appRes.json();
+  const counts = { Applied: 0, Interview: 0, Offer: 0, Rejected: 0 };
+  apps.forEach(app => {
+    const status = app.status || "Applied";
+    counts[status] = (counts[status] || 0) + 1;
+  });
+
+  const ctx2 = document.getElementById("appChart").getContext("2d");
+  new Chart(ctx2, {
+    type: "pie",
+    data: {
+      labels: Object.keys(counts),
+      datasets: [{
+        data: Object.values(counts),
+        backgroundColor: ["#93c5fd", "#60a5fa", "#10b981", "#f87171"]
+      }]
+    },
+    options: { responsive: true }
+  });
+}
+
+function logoutUser() {
+  localStorage.removeItem("token");
+  window.location.href = "login.html";
+}
+
+window.onload = loadUserAndStats;
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js").then(() => {
+    console.log("Service Worker Registered");
+  });
+}
+</script>
+</body>
+</html>
