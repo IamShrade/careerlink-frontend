@@ -1,26 +1,51 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel='manifest' href='manifest.json'>
-<meta name='theme-color' content='#3b82f6'>
-<link rel='icon' href='favicon.ico' type='image/x-icon'><meta charset="UTF-8"><title>CareerLink AI - Onboarding</title><link rel="stylesheet" href="style.css"></head>
+  <meta charset="UTF-8">
+  <title>CareerLink AI - Onboarding</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#3b82f6">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
 <body>
-<div class="dark-toggle"><label><input type="checkbox" id="theme-toggle" onchange="toggleTheme(this)"> 🌙 Dark Mode</label></div><img src="logo_animated.svg" alt="CareerLink" style="width:180px;margin-bottom:16px;">
+  <div class="dark-toggle">
+    <label>
+      <input type="checkbox" id="theme-toggle" onchange="toggleTheme(this)"> 🌙 Dark Mode
+    </label>
+  </div>
 
-<div class="dark-toggle">
-<label><input type="checkbox" id="theme-toggle" onchange="toggleTheme(this)"> 🌙 Dark Mode</label>
-</div><img src="logo.svg" alt="CareerLink" style="width:160px;margin-bottom:10px;"><div class="container"><h1>CareerLink AI</h1><p class="tagline">Empowering your global career journey.</p>
-<form action="dashboard.html"><input type="text" placeholder="Full Name" required><input type="text" placeholder="Location" required>
-<select><option value="">Career Goal</option><option>Software Engineer</option><option>Product Manager</option><option>Designer</option></select>
-<input type="file"><input type="text" placeholder="Preferred Job Titles (comma-separated)">
-<input type="text" placeholder="Skills (comma-separated)"><button type="submit">Continue</button></form></div><script src="toggle.js"></script>
-<script src="onboarding.js"></script>
-<script src="transition.js"></script>
-<script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js").then(() => {
-    console.log("Service Worker Registered");
-  });
-}
-</script>
-</body></html>
+  <img src="logo_animated.svg" alt="CareerLink" style="width:180px; margin-bottom:16px;">
+
+  <div class="container">
+    <h1>CareerLink AI</h1>
+    <p class="tagline">Empowering your global career journey.</p>
+
+    <form action="dashboard.html">
+      <input type="text" placeholder="Full Name" required>
+      <input type="text" placeholder="Location" required>
+      <select required>
+        <option value="">Career Goal</option>
+        <option>Software Engineer</option>
+        <option>Product Manager</option>
+        <option>Designer</option>
+      </select>
+      <input type="file">
+      <input type="text" placeholder="Preferred Job Titles (comma-separated)">
+      <input type="text" placeholder="Skills (comma-separated)">
+      <button type="submit">Continue</button>
+    </form>
+  </div>
+
+  <script src="toggle.js"></script>
+  <script src="onboarding.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js").then(() => {
+        console.log("Service Worker Registered");
+      });
+    }
+  </script>
+</body>
+</html>
