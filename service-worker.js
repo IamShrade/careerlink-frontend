@@ -1,30 +1,29 @@
+// service-worker.js
 
-self.addEventListener("install", event => {
+const CACHE_NAME = 'careerlink-v1';
+const ASSETS = [
+  '/',
+  '/index.html',
+  '/style.css',
+  '/onboarding.js',
+  '/toggle.js',
+  '/logo.svg',
+  '/favicon.ico',
+  '/manifest.json',
+  '/transition.js',
+  // …only include files you actually have
+];
+
+self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open("careerlink-v1").then(cache => {
-      return cache.addAll([
-        "/",
-        "/index.html",
-        "/dashboard.html",
-        "/login.html",
-        "/register.html",
-        "/resume.html",
-        "/applications.html",
-        "/style.css",
-        "/logo_animated.svg",
-        "/favicon.ico",
-        "/toggle.js",
-        "/onboarding.js",
-        "/transition.js"
-      ]);
-    })
-  );
-});
-
-self.addEventListener("fetch", event => {
-  event.respondWith(
-    caches.match(event.request).then(resp => {
-      return resp || fetch(event.request);
-    })
+    caches.open(CACHE_NAME)
+      .then(cache => 
+        cache.addAll(ASSETS)
+          .catch(err => {
+            console.warn('Some assets failed to cache, but install will continue:', err);
+            // Even if one asset 404s, we resolve to let the SW install succeed:
+            return Promise.resolve();
+          })
+      )
   );
 });
